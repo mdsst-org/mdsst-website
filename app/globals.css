@@ -1,17 +1,6 @@
-@import "tailwindcss";
-
-@theme {
-  --color-silkRed: #DC143C;
-  --color-silkRedDark: #B01030;
-  --color-silkRedLight: #FF6B7A;
-  --color-deepBlack: #000000;
-  --color-charcoal: #1a1a1a;
-  --color-pureWhite: #FFFFFF;
-  --color-offWhite: #F5F5F7;
-  --color-lightGray: #E5E5E7;
-
-  --font-family-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 * {
   -webkit-font-smoothing: antialiased;
