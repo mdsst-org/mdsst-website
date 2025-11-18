@@ -1,0 +1,109 @@
+"use client";
+import { motion } from "framer-motion";
+import { FaHeart, FaHandsHelping, FaBook, FaLeaf } from "react-icons/fa";
+
+export default function Home() {
+  return (
+    <main className="flex flex-col min-h-screen bg-[#FFFDF9] text-gray-900">
+      {/* Hero Section */}
+      <section className="relative flex flex-col items-center justify-center text-center py-24 px-4 bg-gradient-to-br from-[#B71C1C] to-[#7f0000] text-white">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-5xl md:text-6xl font-bold mb-6"
+        >
+          Maa Durga Seva Sansthan
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+          className="text-lg md:text-2xl max-w-2xl mb-8"
+        >
+          Empowering lives through service, compassion, and devotion.
+        </motion.p>
+        <motion.a
+          whileHover={{ scale: 1.05 }}
+          href="/donate"
+          className="bg-[#F9C74F] text-[#7f0000] font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-yellow-400 transition"
+        >
+          Support Our Mission
+        </motion.a>
+      </section>
+
+      {/* Mission Section */}
+      <section className="text-center py-16 px-6 max-w-4xl mx-auto">
+        <h2 className="text-3xl font-semibold mb-6 text-[#B71C1C]">Our Mission</h2>
+        <p className="text-lg leading-relaxed">
+          Maa Durga Seva Sansthan (MDSS) is a non-profit organization dedicated to 
+          improving lives through education, healthcare, women empowerment, and 
+          humanitarian aid — guided by the divine strength and compassion of Maa Durga.
+        </p>
+      </section>
+
+      {/* Initiatives Section */}
+      <section className="bg-[#fdf4f4] py-16 px-6 text-center">
+        <h2 className="text-3xl font-semibold mb-10 text-[#B71C1C]">Our Key Initiatives</h2>
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {[
+            {
+              title: "Education for All",
+              desc: "Providing access to learning for children in rural areas.",
+              icon: <FaBook className="text-[#B71C1C] text-4xl mb-4" />,
+            },
+            {
+              title: "Women Empowerment",
+              desc: "Creating self-reliant communities through skills and awareness.",
+              icon: <FaHandsHelping className="text-[#B71C1C] text-4xl mb-4" />,
+            },
+            {
+              title: "Health & Relief",
+              desc: "Organizing free medical camps and disaster relief operations.",
+              icon: <FaLeaf className="text-[#B71C1C] text-4xl mb-4" />,
+            },
+          ].map((item, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ scale: 1.05 }}
+              className="p-8 bg-white rounded-2xl shadow-lg"
+            >
+              {item.icon}
+              <h3 className="text-xl font-semibold mb-2 text-[#7f0000]">{item.title}</h3>
+              <p>{item.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Impact Stats */}
+      <section className="py-16 px-6 bg-gradient-to-r from-[#B71C1C] to-[#7f0000] text-white text-center">
+        <h2 className="text-3xl font-semibold mb-10">Our Impact</h2>
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {[
+            { number: "1200+", label: "Families Supported" },
+            { number: "50+", label: "Community Events" },
+            { number: "100+", label: "Volunteers Engaged" },
+          ].map((stat, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ scale: 1.1 }}
+              className="p-6 bg-[#ffffff22] rounded-2xl backdrop-blur-sm shadow-lg"
+            >
+              <h3 className="text-4xl font-bold mb-2">{stat.number}</h3>
+              <p>{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-[#1E3A8A] text-white text-center py-8 mt-10">
+        <p className="mb-2">© {new Date().getFullYear()} Maa Durga Seva Sansthan</p>
+        <p className="text-sm opacity-90">
+          Registered charitable trust with 12A & 80G certification.
+        </p>
+      </footer>
+    </main>
+  );
+}
