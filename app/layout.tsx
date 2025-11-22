@@ -9,12 +9,12 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
-  { href: "#home", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#campaigns", label: "Campaigns" },
-  { href: "#news", label: "News" },
-  { href: "#volunteer", label: "Volunteer" },
-  { href: "#contact", label: "Contact" },
+  { href: "/", label: "Home" },
+  { href: "/#about", label: "About" },
+  { href: "/#campaigns", label: "Campaigns" },
+  { href: "/#news", label: "News" },
+  { href: "/#volunteer", label: "Volunteer" },
+  { href: "/#contact", label: "Contact" },
 ];
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <nav className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="flex h-24 items-center justify-between">
               {/* Logo */}
-              <Link href="#home" className="flex items-center gap-3 group">
+              <Link href="/" className="flex items-center gap-3 group">
                 <div className="relative h-16 w-16 overflow-hidden rounded-full">
                   <Image
                     src="/logo.png"
@@ -86,7 +86,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   </Link>
                 ))}
                 <Link
-                  href="#donate"
+                  href="/#donate"
                   className="rounded-full bg-silkRed px-6 py-2.5 text-sm font-medium text-pureWhite hover:bg-silkRedDark transition-all duration-200 hover:shadow-lg"
                 >
                   Donate
@@ -127,7 +127,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     </Link>
                   ))}
                   <Link
-                    href="#donate"
+                    href="/#donate"
                     onClick={() => setMobileMenuOpen(false)}
                     className="block w-full text-center rounded-full bg-silkRed px-6 py-3 text-base font-medium text-pureWhite"
                   >

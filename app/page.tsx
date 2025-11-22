@@ -28,6 +28,19 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-offWhite via-pureWhite to-offWhite">
+        {/* Background Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.70 }}
+        >
+          <source src="/videos/vid2.mp4" type="video/mp4" />
+        </video>
+        {/* Dark overlay for better text visibility */}
+        <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(220,20,60,0.05),transparent_50%)]" />
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-32 lg:px-8 text-center">
           <motion.div
@@ -35,12 +48,12 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-charcoal mb-6">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
               Empowering Lives
               <br />
-              <span className="text-silkRed">Through Compassion</span>
+              <span className="text-silkRed" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>Through Compassion</span>
             </h1>
-            <p className="mx-auto max-w-2xl text-lg sm:text-xl text-charcoal/70 mb-12">
+            <p className="mx-auto max-w-2xl text-lg sm:text-xl text-white mb-12" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
               Maa Durga Seva Sansthan Trust is dedicated to creating lasting change through health, education, and community welfare programs across Jharkhand.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -53,7 +66,7 @@ export default function Home() {
               </Link>
               <Link
                 href="#about"
-                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-charcoal/20 px-8 py-4 text-base font-medium text-charcoal hover:border-silkRed hover:text-silkRed transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/80 bg-white/10 backdrop-blur-sm px-8 py-4 text-base font-medium text-white hover:bg-silkRed hover:border-silkRed transition-all duration-200"
               >
                 Learn More
               </Link>
@@ -336,22 +349,32 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
+                title: "Nasha Mukti Jagrukta Abhiyaan",
+                date: "November 20, 2024",
+                desc: "Organized a comprehensive anti-drug awareness campaign to educate youth and communities about the dangers of substance abuse.",
+                image: "/images/nashamukti1.jpg",
+                slug: "nasha-mukti-jagrukta-abhiyaan",
+              },
+              {
                 title: "Health Camp in Baliapur",
                 date: "March 15, 2024",
                 desc: "Successfully conducted a free health check-up camp serving over 200 community members.",
                 image: "/images/initiative4.jpg",
+                slug: "health-camp-baliapur",
               },
               {
                 title: "School Supplies Distribution",
                 date: "February 28, 2024",
                 desc: "Distributed books, bags, and stationery to 150 underprivileged children.",
                 image: "/images/initiative2.jpg",
+                slug: "school-supplies-distribution",
               },
               {
                 title: "Women Empowerment Workshop",
                 date: "January 20, 2024",
                 desc: "Organized skill development and awareness sessions for 80 women in rural areas.",
                 image: "/images/initiative3.jpg",
+                slug: "women-empowerment-workshop",
               },
             ].map((news, idx) => (
               <motion.article
@@ -360,28 +383,36 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="group bg-offWhite rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300"
               >
-                <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={news.image}
-                    alt={news.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 text-sm text-silkRed mb-3">
-                    <Calendar className="w-4 h-4" />
-                    <span>{news.date}</span>
+                <Link
+                  href={`/news/${news.slug}`}
+                  className="block group bg-offWhite rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300"
+                >
+                  <div className="relative h-48 overflow-hidden">
+                    <Image
+                      src={news.image}
+                      alt={news.title}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
                   </div>
-                  <h3 className="text-xl font-semibold text-charcoal mb-3 group-hover:text-silkRed transition-colors">
-                    {news.title}
-                  </h3>
-                  <p className="text-charcoal/70 leading-relaxed">
-                    {news.desc}
-                  </p>
-                </div>
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 text-sm text-silkRed mb-3">
+                      <Calendar className="w-4 h-4" />
+                      <span>{news.date}</span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-charcoal mb-3 group-hover:text-silkRed transition-colors">
+                      {news.title}
+                    </h3>
+                    <p className="text-charcoal/70 leading-relaxed mb-4">
+                      {news.desc}
+                    </p>
+                    <span className="inline-flex items-center gap-2 text-silkRed font-medium group-hover:gap-3 transition-all">
+                      Read More
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </Link>
               </motion.article>
             ))}
           </div>
