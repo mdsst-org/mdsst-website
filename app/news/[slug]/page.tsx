@@ -1,8 +1,8 @@
 "use client";
 
-import { use } from "react";
-import { motion } from "framer-motion";
-import { Calendar, ArrowLeft, MapPin, Users } from "lucide-react";
+import { use, useState, useEffect, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Calendar, ArrowLeft, MapPin, Users, X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -89,6 +89,93 @@ export default function NewsDetailPage({ params }: { params: Promise<{ slug: str
     notFound();
   }
 
+  const allImages = useMemo(() => [news.image, ...(news.additionalImages || [])], [news.image, news.additionalImages]);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [zoom, setZoom] = useState(1);
+
+  const openLightbox = (index: number) => {
+    setCurrentImageIndex(index);
+    setLightboxOpen(true);
+    setZoom(1);
+  };
+
+  const closeLightbox = () => {
+    setLightboxOpen(false);
+    setZoom(1);
+  };
+
+  const goToPrevious = () => {
+    setCurrentImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
+    setZoom(1);
+  };
+
+  const goToNext = () => {
+    setCurrentImageIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
+    setZoom(1);
+  };
+
+  const zoomIn = () => {
+    setZoom((prev) => Math.min(prev + 0.25, 3));
+  };
+
+  const zoomOut = () => {
+    setZoom((prev) => Math.max(prev - 0.25, 0.5));
+  };
+
+  const resetZoom = () => {
+    setZoom(1);
+  };
+
+  // Handle ESC key press and mouse wheel zoom
+  useEffect(() => {
+    if (!lightboxOpen) return;
+
+    const totalImages = allImages.length;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setLightboxOpen(false);
+        setZoom(1);
+      }
+      if (e.key === 'ArrowLeft') {
+        setCurrentImageIndex((prev) => (prev === 0 ? totalImages - 1 : prev - 1));
+        setZoom(1);
+      }
+      if (e.key === 'ArrowRight') {
+        setCurrentImageIndex((prev) => (prev === totalImages - 1 ? 0 : prev + 1));
+        setZoom(1);
+      }
+      if (e.key === '+' || e.key === '=') {
+        setZoom((prev) => Math.min(prev + 0.25, 3));
+      }
+      if (e.key === '-' || e.key === '_') {
+        setZoom((prev) => Math.max(prev - 0.25, 0.5));
+      }
+      if (e.key === '0') {
+        setZoom(1);
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        if (e.deltaY < 0) {
+          setZoom((prev) => Math.min(prev + 0.25, 3));
+        } else {
+          setZoom((prev) => Math.max(prev - 0.25, 0.5));
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, [lightboxOpen]);
+
   return (
     <div className="min-h-screen bg-pureWhite">
       <section className="relative h-[60vh] overflow-hidden">
@@ -161,13 +248,20 @@ export default function NewsDetailPage({ params }: { params: Promise<{ slug: str
                 <h3 className="text-2xl font-semibold text-charcoal mb-6">Event Gallery</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {news.additionalImages.map((image, idx) => (
-                    <div key={idx} className="relative h-64 md:h-80 rounded-2xl overflow-hidden">
+                    <div 
+                      key={idx} 
+                      className="relative h-80 md:h-96 rounded-2xl overflow-hidden bg-offWhite cursor-pointer group"
+                      onClick={() => openLightbox(idx + 1)}
+                    >
                       <Image
                         src={image}
                         alt={`${news.title} - Image ${idx + 2}`}
                         fill
-                        className="object-cover hover:scale-105 transition-transform duration-300"
+                        className="object-contain group-hover:scale-105 transition-transform duration-300"
                       />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                        <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-sm font-medium">Click to enlarge</span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -209,6 +303,126 @@ export default function NewsDetailPage({ params }: { params: Promise<{ slug: str
           </motion.div>
         </div>
       </section>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {lightboxOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4"
+            onClick={closeLightbox}
+          >
+            {/* Close Button */}
+            <button
+              onClick={closeLightbox}
+              className="absolute top-4 right-4 z-[110] p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-8 h-8 text-white" />
+            </button>
+
+            {/* Zoom Controls */}
+            <div className="absolute top-4 left-4 z-[110] flex flex-col gap-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  zoomIn();
+                }}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                aria-label="Zoom in"
+              >
+                <ZoomIn className="w-6 h-6 text-white" />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  zoomOut();
+                }}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                aria-label="Zoom out"
+              >
+                <ZoomOut className="w-6 h-6 text-white" />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  resetZoom();
+                }}
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                aria-label="Reset zoom to 100%"
+                title="Reset zoom"
+              >
+                <Maximize2 className="w-6 h-6 text-white" />
+              </button>
+            </div>
+
+            {/* Previous Button */}
+            {allImages.length > 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToPrevious();
+                }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-[110] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                aria-label="Previous image"
+              >
+                <ChevronLeft className="w-8 h-8 text-white" />
+              </button>
+            )}
+
+            {/* Next Button */}
+            {allImages.length > 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  goToNext();
+                }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-[110] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                aria-label="Next image"
+              >
+                <ChevronRight className="w-8 h-8 text-white" />
+              </button>
+            )}
+
+            {/* Image Container */}
+            <div className="relative w-full h-full flex items-center justify-center overflow-auto">
+              <div 
+                className="relative max-w-[90vw] max-h-[85vh] w-auto h-auto transition-transform duration-200"
+                onClick={(e) => e.stopPropagation()}
+                style={{ 
+                  transform: `scale(${zoom})`,
+                  cursor: zoom > 1 ? 'move' : 'default'
+                }}
+              >
+                <Image
+                  src={allImages[currentImageIndex]}
+                  alt={`${news.title} - Image ${currentImageIndex + 1}`}
+                  width={1920}
+                  height={1080}
+                  className="object-contain max-w-full max-h-[85vh] w-auto h-auto"
+                  priority
+                />
+              </div>
+            </div>
+
+            {/* Image Counter and Zoom Level */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-3 z-[110]">
+              <div className="bg-white/10 px-4 py-2 rounded-full">
+                <span className="text-white text-sm font-medium">
+                  {currentImageIndex + 1} / {allImages.length}
+                </span>
+              </div>
+              <div className="bg-white/10 px-4 py-2 rounded-full">
+                <span className="text-white text-sm font-medium">
+                  {Math.round(zoom * 100)}%
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

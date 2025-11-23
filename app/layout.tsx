@@ -51,11 +51,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             borderBottom: isScrolled ? '1px solid rgba(220, 20, 60, 0.2)' : 'none'
           }}
         >
-          <nav className="mx-auto max-w-7xl px-6 lg:px-8">
+          <nav className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 xl:px-12">
             <div className="flex h-24 items-center justify-between">
               {/* Logo */}
-              <Link href="/" className="flex items-center gap-3 group">
-                <div className="relative h-16 w-16 overflow-hidden rounded-full">
+              <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-shrink-0">
+                <div className="relative h-12 w-12 sm:h-16 sm:w-16 overflow-hidden rounded-full flex-shrink-0">
                   <Image
                     src="/logo.png"
                     alt="MDSST Logo"
@@ -63,16 +63,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     className="object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
-                <div className="hidden sm:block">
-                  <div className="text-base font-semibold tracking-tight leading-tight" style={{ color: '#FFFFFF' }}>
+                <div className="block">
+                  <div className="text-xs sm:text-sm lg:text-base font-semibold tracking-tight leading-tight" style={{ color: '#FFFFFF' }}>
                     Maa Durga Seva Sansthan Trust
                   </div>
-                  <div className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Serving Humanity with Compassion</div>
+                  <div className="text-[10px] sm:text-xs" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Serving Humanity with Compassion</div>
                 </div>
               </Link>
 
               {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center gap-8">
+              <div className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
