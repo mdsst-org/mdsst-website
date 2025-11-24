@@ -2,24 +2,382 @@
 
 import "./globals.css";
 import type { ReactNode } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Languages } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Language Context
+const LanguageContext = createContext<{
+  language: 'en' | 'hi';
+  toggleLanguage: () => void;
+}>({ language: 'en', toggleLanguage: () => {} });
+
+export const useLanguage = () => useContext(LanguageContext);
+
+export const translations = {
+  en: {
+    nav: {
+      home: 'Home',
+      about: 'About',
+      campaigns: 'Campaigns',
+      news: 'News',
+      volunteer: 'Volunteer',
+      contact: 'Contact',
+      donate: 'Donate'
+    },
+    donateButton: 'Donate',
+    donateNow: 'Donate Now',
+    trustName: 'Maa Durga Seva Sansthan Trust',
+    tagline: 'Serving Humanity with Compassion',
+    hero: {
+      title: 'Empowering Lives',
+      titleSpan: 'Through Compassion',
+      subtitle: 'Maa Durga Seva Sansthan Trust is dedicated to creating lasting change through health, education, and community welfare programs across Jharkhand.',
+      getInvolved: 'Make a Difference',
+      learnMore: 'Learn More'
+    },
+    about: {
+      title: 'Our Mission',
+      description: 'Creating sustainable change through dedicated community service',
+      healthcare: 'Healthcare',
+      healthcareDesc: 'Free medical camps and health awareness programs',
+      education: 'Education',
+      educationDesc: "Supporting underprivileged children's education",
+      community: 'Community',
+      communityDesc: 'Empowering communities through welfare programs',
+      compassion: 'Compassion',
+      compassionDesc: 'Serving with love and dedication',
+      vision: 'Our Vision',
+      visionText: 'To create a society where every individual has access to basic necessities and opportunities for growth.',
+      mission: 'Our Mission',
+      missionText: 'To serve humanity with compassion, focusing on health, education, and community development.'
+    },
+    campaigns: {
+      title: 'Our Campaigns',
+      subtitle: 'Making a difference through targeted initiatives',
+      campaign1: {
+        title: 'Community Health & Wellness',
+        desc: 'Regular health camps with trained medical professionals providing check-ups, medicines, and health awareness to underserved communities.'
+      },
+      campaign2: {
+        title: 'Education For Children',
+        desc: 'Breaking barriers and helping children from poor backgrounds by distributing books, uniforms, bags, and educational materials.'
+      },
+      supportCampaign: 'Support This Campaign'
+    },
+    news: {
+      title: 'Latest News & Events',
+      subtitle: 'Stay updated with our recent activities and upcoming initiatives',
+      readMore: 'Read More',
+      backToNews: 'Back to News',
+      article1: {
+        title: 'Nasha Mukti Jagrukta Abhiyaan',
+        date: 'November 20, 2024',
+        desc: 'Organized a comprehensive anti-drug awareness campaign to educate youth and communities about the dangers of substance abuse.',
+        location: 'Multiple Villages, Dhanbad District',
+        participants: '500+ youth and community members'
+      },
+      article2: {
+        title: 'Health Camp in Baliapur',
+        date: 'March 15, 2024',
+        desc: 'Successfully conducted a free health check-up camp serving over 200 community members.',
+        location: 'Baliapur Village, Dhanbad',
+        participants: '200+ community members'
+      },
+      article3: {
+        title: 'Women Empowerment Workshop',
+        date: 'January 20, 2024',
+        desc: 'Organized skill development and awareness sessions for 80 women in rural areas.',
+        location: 'Rural Areas, Jharkhand',
+        participants: '80 women'
+      }
+    },
+    volunteer: {
+      title: 'Become a Volunteer',
+      subtitle: 'Join our team of dedicated volunteers and make a real difference in the lives of those who need it most. Whether you can spare a few hours a week or want to be more involved, we welcome your support.',
+      item1: 'Help organize health camps and community events',
+      item2: 'Assist in educational programs for children',
+      item3: 'Support administrative and fundraising activities',
+      item4: 'Share your skills and expertise with our team',
+      formTitle: 'Volunteer Registration',
+      fullName: 'Full Name',
+      email: 'Email',
+      phone: 'Phone',
+      areaOfInterest: 'Area of Interest',
+      selectArea: 'Select an area',
+      healthcare: 'Healthcare',
+      education: 'Education',
+      communityDev: 'Community Development',
+      fundraising: 'Fundraising',
+      adminSupport: 'Administrative Support',
+      message: 'Message',
+      namePlaceholder: 'Your name',
+      emailPlaceholder: 'your.email@example.com',
+      phonePlaceholder: '+91 XXXXX XXXXX',
+      messagePlaceholder: 'Tell us about yourself and why you want to volunteer...',
+      submitApp: 'Submit Application',
+      joinUs: 'Join Us Today'
+    },
+    contact: {
+      title: 'Get in Touch',
+      subtitle: 'We would love to hear from you',
+      description: 'Have questions or want to get involved? Reach out to us and we will get back to you as soon as possible.',
+      name: 'Your Name',
+      email: 'Your Email',
+      message: 'Your Message',
+      send: 'Send Message',
+      contactUs: 'Contact Us',
+      address: 'Address',
+      phone: 'Phone',
+      emailLabel: 'Email'
+    },
+    donation: {
+      title: 'Make an Impact',
+      subtitle: 'Your contribution helps us create lasting change in communities across Jharkhand',
+      heading: 'Every Contribution Matters',
+      description: 'Your donation directly supports health camps, educational programs, and community welfare initiatives. We ensure complete transparency and responsible use of every rupee.',
+      item1: 'Free medical camps and health awareness',
+      item2: 'Educational support for underprivileged children',
+      item3: 'Women empowerment programs',
+      item4: 'Community welfare initiatives',
+      bankTransfer: 'Bank Transfer Details',
+      afterDonating: 'After donating, please share transaction details at',
+      donateNow: 'Donate Now'
+    },
+    impact: {
+      title: 'Our Impact',
+      subtitle: 'Creating measurable change in communities across Jharkhand',
+      stat1: 'Lives Touched',
+      stat2: 'Health Camps',
+      stat3: 'Children Supported',
+      stat4: 'Villages Reached'
+    },
+    footer: {
+      description: 'Maa Durga Seva Sansthan Trust is dedicated to creating positive change through health, education, and community welfare programs.',
+      quickLinks: 'Quick Links',
+      contactUs: 'Contact Us',
+      allRights: 'All rights reserved.'
+    },
+    aboutCards: {
+      card1: {
+        title: 'Healthcare',
+        description: 'We provide free medical camps and health awareness programs to underprivileged communities.'
+      },
+      card2: {
+        title: 'Education',
+        description: 'We support the education of underprivileged children, providing them with access to quality education.'
+      },
+      card3: {
+        title: 'Community Development',
+        description: 'We empower communities through welfare programs, promoting sustainable development and social change.'
+      }
+    },
+    donationSection: {
+      title: 'Donate',
+      subtitle: 'Your contribution can make a significant difference in the lives of those we serve.',
+      donateNow: 'Donate Now'
+    },
+    impactStats: {
+      title: 'Our Impact',
+      stat1: {
+        value: '1000+',
+        description: 'People served through our healthcare programs'
+      },
+      stat2: {
+        value: '500+',
+        description: 'Children supported through our education programs'
+      },
+      stat3: {
+        value: '20+',
+        description: 'Communities empowered through our community development programs'
+      }
+    },
+    contactSection: {
+      title: 'Get in Touch',
+      address: 'Maa Durga Seva Sansthan Trust, Jharkhand, India',
+      phone: '+91 1234567890',
+      email: 'info@mdsst.org'
+    }
+  },
+  hi: {
+    nav: {
+      home: 'होम',
+      about: 'हमारे बारे में',
+      campaigns: 'अभियान',
+      news: 'समाचार',
+      volunteer: 'स्वयंसेवक',
+      contact: 'संपर्क',
+      donate: 'दान करें'
+    },
+    donateButton: 'दान करें',
+    donateNow: 'अभी दान करें',
+    trustName: 'माँ दुर्गा सेवा संस्थान ट्रस्ट',
+    tagline: 'करुणा के साथ मानवता की सेवा',
+    hero: {
+      title: 'जीवन को सशक्त बनाना',
+      titleSpan: 'करुणा के माध्यम से',
+      subtitle: 'माँ दुर्गा सेवा संस्थान ट्रस्ट झारखंड में स्वास्थ्य, शिक्षा और सामुदायिक कल्याण कार्यक्रमों के माध्यम से स्थायी परिवर्तन लाने के लिए समर्पित है।',
+      getInvolved: 'बदलाव लाएं',
+      learnMore: 'और जानें'
+    },
+    about: {
+      title: 'हमारा मिशन',
+      description: 'समर्पित सामुदायिक सेवा के माध्यम से स्थायी परिवर्तन लाना',
+      healthcare: 'स्वास्थ्य सेवा',
+      healthcareDesc: 'मुफ्त चिकित्सा शिविर और स्वास्थ्य जागरूकता कार्यक्रम',
+      education: 'शिक्षा',
+      educationDesc: "वंचित बच्चों की शिक्षा का समर्थन",
+      community: 'समुदाय',
+      communityDesc: 'कल्याण कार्यक्रमों के माध्यम से समुदायों को सशक्त बनाना',
+      compassion: 'करुणा',
+      compassionDesc: 'प्रेम और समर्पण के साथ सेवा',
+      vision: 'हमारी दृष्टि',
+      visionText: 'एक ऐसा समाज बनाना जहां प्रत्येक व्यक्ति को बुनियादी आवश्यकताओं और विकास के अवसरों तक पहुंच हो।',
+      mission: 'हमारा मिशन',
+      missionText: 'स्वास्थ्य, शिक्षा और सामुदायिक विकास पर ध्यान केंद्रित करते हुए करुणा के साथ मानवता की सेवा करना।'
+    },
+    campaigns: {
+      title: 'हमारे अभियान',
+      subtitle: 'केंद्रित पहलों के माध्यम से बदलाव लाना',
+      campaign1: {
+        title: 'सामुदायिक स्वास्थ्य और कल्याण',
+        desc: 'प्रशिक्षित चिकित्सा पेशेवरों के साथ नियमित स्वास्थ्य शिविर जो वंचित समुदायों को जांच, दवाइयां और स्वास्थ्य जागरूकता प्रदान करते हैं।'
+      },
+      campaign2: {
+        title: 'बच्चों के लिए शिक्षा',
+        desc: 'गरीब पृष्ठभूमि के बच्चों की मदद करना और पुस्तकें, वर्दी, बैग और शैक्षिक सामग्री वितरित करके बाधाओं को तोड़ना।'
+      },
+      supportCampaign: 'इस अभियान का समर्थन करें'
+    },
+    news: {
+      title: 'नवीनतम समाचार और कार्यक्रम',
+      subtitle: 'हमारी हाल की गतिविधियों से अपडेट रहें',
+      readMore: 'और पढ़ें',
+      backToNews: 'समाचार पर वापस',
+      article1: {
+        title: 'नशा मुक्ति जागरूकता अभियान',
+        date: '20 नवंबर, 2024',
+        desc: 'युवाओं और समुदायों को नशे के दुरुपयोग के खतरों के बारे में शिक्षित करने के लिए एक व्यापक नशा विरोधी जागरूकता अभियान आयोजित किया।',
+        location: 'कई गांव, धनबाद जिला',
+        participants: '500+ युवा और समुदाय के सदस्य'
+      },
+      article2: {
+        title: 'बलियापुर में स्वास्थ्य शिविर',
+        date: '15 मार्च, 2024',
+        desc: '200 से अधिक समुदाय के सदस्यों की सेवा करते हुए एक मुफ्त स्वास्थ्य जांच शिविर सफलतापूर्वक आयोजित किया।',
+        location: 'बलियापुर गांव, धनबाद',
+        participants: '200+ समुदाय के सदस्य'
+      },
+      article3: {
+        title: 'महिला सशक्तिकरण कार्यशाला',
+        date: '20 जनवरी, 2024',
+        desc: 'ग्रामीण क्षेत्रों में 80 महिलाओं के लिए कौशल विकास और जागरूकता सत्र आयोजित किए।',
+        location: 'ग्रामीण क्षेत्र, झारखंड',
+        participants: '80 महिलाएं'
+      }
+    },
+    volunteer: {
+      title: 'स्वयंसेवक बनें',
+      subtitle: 'आपका समय और कौशल वास्तविक बदलाव ला सकता है',
+      item1: 'स्वास्थ्य शिविरों और सामुदायिक कार्यक्रमों के आयोजन में मदद करें',
+      item2: 'बच्चों के लिए शैक्षिक कार्यक्रमों में सहायता करें',
+      item3: 'प्रशासनिक और धन संग्रह गतिविधियों में सहायता करें',
+      item4: 'अपने कौशल और विशेषज्ञता हमारी टीम के साथ साझा करें',
+      formTitle: 'स्वयंसेवक पंजीकरण',
+      fullName: 'पूरा नाम',
+      email: 'ईमेल',
+      phone: 'फोन',
+      areaOfInterest: 'रुचि का क्षेत्र',
+      selectArea: 'एक क्षेत्र चुनें',
+      healthcare: 'स्वास्थ्य सेवा',
+      education: 'शिक्षा',
+      communityDev: 'सामुदायिक विकास',
+      fundraising: 'धन संग्रह',
+      adminSupport: 'प्रशासनिक सहायता',
+      message: 'संदेश',
+      namePlaceholder: 'आपका नाम',
+      emailPlaceholder: 'your.email@example.com',
+      phonePlaceholder: '+91 XXXXX XXXXX',
+      messagePlaceholder: 'अपने बारे में बताएं और आप स्वयंसेवक क्यों बनना चाहते हैं...',
+      submitApp: 'आवेदन जमा करें',
+      joinUs: 'आज ही जुड़ें'
+    },
+    contact: {
+      title: 'संपर्क में रहें',
+      subtitle: 'कोई प्रश्न हैं या शामिल होना चाहते हैं? हम आपसे सुनना पसंद करेंगे।',
+      location: 'स्थान',
+      phone: 'फोन',
+      email: 'ईमेल',
+      formTitle: 'हमें एक संदेश भेजें',
+      name: 'नाम',
+      subject: 'विषय',
+      message: 'संदेश',
+      namePlaceholder: 'आपका नाम',
+      emailPlaceholder: 'your.email@example.com',
+      subjectPlaceholder: 'यह किस बारे में है?',
+      messagePlaceholder: 'आपका संदेश...',
+      send: 'संदेश भेजें',
+      contactUs: 'हमसे संपर्क करें'
+    },
+    donation: {
+      title: 'प्रभाव डालें',
+      subtitle: 'आपका योगदान झारखंड भर के समुदायों में स्थायी परिवर्तन लाने में मदद करता है',
+      heading: 'हर योगदान मायने रखता है',
+      description: 'आपका दान सीधे स्वास्थ्य शिविरों, शैक्षिक कार्यक्रमों और सामुदायिक कल्याण पहलों का समर्थन करता है। हम प्रत्येक रुपये के पूर्ण पारदर्शिता और जिम्मेदार उपयोग सुनिश्चित करते हैं।',
+      item1: 'मुफ्त चिकित्सा शिविर और स्वास्थ्य जागरूकता',
+      item2: 'वंचित बच्चों के लिए शैक्षिक सहायता',
+      item3: 'महिला सशक्तिकरण कार्यक्रम',
+      item4: 'सामुदायिक कल्याण पहल',
+      bankTransfer: 'बैंक हस्तांतरण विवरण',
+      afterDonating: 'दान करने के बाद, कृपया लेन-देन का विवरण इस पर साझा करें',
+      donateNow: 'अभी दान करें'
+    },
+    impact: {
+      title: 'हमारा प्रभाव',
+      subtitle: 'झारखंड भर के समुदायों में मापनीय परिवर्तन ला रहे हैं',
+      stat1: 'जीवन प्रभावित',
+      stat2: 'स्वास्थ्य शिविर',
+      stat3: 'बच्चों का समर्थन',
+      stat4: 'गांव पहुंचे'
+    },
+    footer: {
+      description: 'माँ दुर्गा सेवा संस्थान ट्रस्ट स्वास्थ्य, शिक्षा और सामुदायिक कल्याण कार्यक्रमों के माध्यम से सकारात्मक परिवर्तन लाने के लिए समर्पित है।',
+      quickLinks: 'त्वरित लिंक',
+      contactUs: 'हमसे संपर्क करें',
+      allRights: 'सर्वाधिकार सुरक्षित।'
+    }
+  }
+};
+
 const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/#about", label: "About" },
-  { href: "/#campaigns", label: "Campaigns" },
-  { href: "/#news", label: "News" },
-  { href: "/#volunteer", label: "Volunteer" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/", key: "home" as const },
+  { href: "/#about", key: "about" as const },
+  { href: "/#campaigns", key: "campaigns" as const },
+  { href: "/#news", key: "news" as const },
+  { href: "/#volunteer", key: "volunteer" as const },
+  { href: "/#contact", key: "contact" as const },
 ];
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'hi'>('en');
+
+  const toggleLanguage = () => {
+    const newLang = language === 'en' ? 'hi' : 'en';
+    setLanguage(newLang);
+    localStorage.setItem('preferred-language', newLang);
+  };
+
+  useEffect(() => {
+    // Load saved language preference
+    const savedLang = localStorage.getItem('preferred-language') as 'en' | 'hi' | null;
+    if (savedLang) {
+      setLanguage(savedLang);
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,15 +388,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <html lang="en" className="scroll-smooth">
-      <head>
-        <title>Maa Durga Seva Sansthan Trust | Empowering Lives</title>
-        <meta
-          name="description"
-          content="A charitable trust dedicated to health, education, and community welfare in Jharkhand."
-        />
-      </head>
-      <body className="bg-pureWhite text-charcoal">
+    <LanguageContext.Provider value={{ language, toggleLanguage }}>
+      <html lang={language} className="scroll-smooth">
+        <head>
+          <title>Maa Durga Seva Sansthan Trust | Empowering Lives</title>
+          <meta
+            name="description"
+            content="A charitable trust dedicated to health, education, and community welfare in Jharkhand."
+          />
+        </head>
+        <body className="bg-pureWhite text-charcoal">
         {/* Navigation */}
         <motion.header
           initial={{ y: -100 }}
@@ -65,9 +424,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </div>
                 <div className="block">
                   <div className="text-xs sm:text-sm lg:text-base font-semibold tracking-tight leading-tight" style={{ color: '#FFFFFF' }}>
-                    Maa Durga Seva Sansthan Trust
+                    {translations[language].trustName}
                   </div>
-                  <div className="text-[10px] sm:text-xs" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Serving Humanity with Compassion</div>
+                  <div className="text-[10px] sm:text-xs" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>{translations[language].tagline}</div>
                 </div>
               </Link>
 
@@ -82,14 +441,22 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     onMouseEnter={(e) => e.currentTarget.style.color = '#DC143C'}
                     onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
                   >
-                    {item.label}
+                    {translations[language].nav[item.key]}
                   </Link>
                 ))}
+                <button
+                  onClick={toggleLanguage}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium text-white whitespace-nowrap"
+                  aria-label="Toggle language"
+                >
+                  <Languages className="w-4 h-4" />
+                  {language === 'en' ? 'हिंदी' : 'English'}
+                </button>
                 <Link
                   href="/#donate"
-                  className="rounded-full bg-silkRed px-6 py-2.5 text-sm font-medium text-pureWhite hover:bg-silkRedDark transition-all duration-200 hover:shadow-lg"
+                  className="rounded-full bg-silkRed px-6 py-2.5 text-sm font-medium text-pureWhite hover:bg-silkRedDark transition-all duration-200 hover:shadow-lg whitespace-nowrap"
                 >
-                  Donate
+                  {translations[language].donateButton}
                 </Link>
               </div>
 
@@ -157,17 +524,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                       className="object-cover"
                     />
                   </div>
-                  <div className="text-lg font-semibold text-silkRed">MDSST</div>
+                  <div className="text-lg font-semibold text-silkRed">{translations[language].trustName}</div>
                 </div>
                 <p className="text-sm text-pureWhite/70 leading-relaxed">
-                  Maa Durga Seva Sansthan Trust is dedicated to creating positive
-                  change through health, education, and community welfare programs.
+                  {translations[language].footer.description}
                 </p>
               </div>
 
               {/* Quick Links */}
               <div>
-                <h3 className="text-sm font-semibold mb-4 text-pureWhite">Quick Links</h3>
+                <h3 className="text-sm font-semibold mb-4 text-pureWhite">{translations[language].footer.quickLinks}</h3>
                 <ul className="space-y-2">
                   {navItems.map((item) => (
                     <li key={item.href}>
@@ -175,7 +541,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         href={item.href}
                         className="text-sm text-pureWhite/70 hover:text-silkRed transition-colors"
                       >
-                        {item.label}
+                        {translations[language].nav[item.key]}
                       </Link>
                     </li>
                   ))}
@@ -184,7 +550,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
               {/* Contact */}
               <div>
-                <h3 className="text-sm font-semibold mb-4 text-pureWhite">Contact Us</h3>
+                <h3 className="text-sm font-semibold mb-4 text-pureWhite">{translations[language].footer.contactUs}</h3>
                 <div className="space-y-2 text-sm text-pureWhite/70">
                   <p>Nayadih, Keliasole, Dhanbad</p>
                   <p>Jharkhand - 828201, India</p>
@@ -213,7 +579,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </div>
           </div>
         </footer>
-      </body>
-    </html>
+        </body>
+      </html>
+    </LanguageContext.Provider>
   );
 }

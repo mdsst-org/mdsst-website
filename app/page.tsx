@@ -5,8 +5,10 @@ import { Heart, Users, GraduationCap, Stethoscope, ArrowRight, Mail, Phone, MapP
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useLanguage, translations } from "./layout";
 
 export default function Home() {
+  const { language } = useLanguage();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [
     "/images/initiative1.jpg",
@@ -49,26 +51,26 @@ export default function Home() {
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-6" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
-              Empowering Lives
+              {translations[language].hero.title}
               <br />
-              <span className="text-silkRed" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>Through Compassion</span>
+              <span className="text-silkRed" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}>{translations[language].hero.titleSpan}</span>
             </h1>
             <p className="mx-auto max-w-2xl text-lg sm:text-xl text-white mb-12" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>
-              Maa Durga Seva Sansthan Trust is dedicated to creating lasting change through health, education, and community welfare programs across Jharkhand.
+              {translations[language].hero.subtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="#donate"
                 className="group inline-flex items-center justify-center gap-2 rounded-full bg-silkRed px-8 py-4 text-base font-medium text-pureWhite hover:bg-silkRedDark transition-all duration-200 hover:shadow-xl"
               >
-                Make a Difference
+                {translations[language].hero.getInvolved}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="#about"
                 className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/80 bg-white/10 backdrop-blur-sm px-8 py-4 text-base font-medium text-white hover:bg-silkRed hover:border-silkRed transition-all duration-200"
               >
-                Learn More
+                {translations[language].hero.learnMore}
               </Link>
             </div>
           </motion.div>
@@ -86,19 +88,19 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-charcoal mb-4">
-              Our Mission
+              {translations[language].about.title}
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-charcoal/70">
-              Creating sustainable change through dedicated community service
+              {translations[language].about.description}
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Stethoscope, title: "Healthcare", desc: "Free medical camps and health awareness programs" },
-              { icon: GraduationCap, title: "Education", desc: "Supporting underprivileged children's education" },
-              { icon: Users, title: "Community", desc: "Empowering communities through welfare programs" },
-              { icon: Heart, title: "Compassion", desc: "Serving with love and dedication" },
+              { icon: Stethoscope, titleKey: 'healthcare', descKey: 'healthcareDesc' },
+              { icon: GraduationCap, titleKey: 'education', descKey: 'educationDesc' },
+              { icon: Users, titleKey: 'community', descKey: 'communityDesc' },
+              { icon: Heart, titleKey: 'compassion', descKey: 'compassionDesc' },
             ].map((item, idx) => (
               <motion.div
                 key={idx}
@@ -110,10 +112,10 @@ export default function Home() {
               >
                 <item.icon className="w-12 h-12 mb-4 text-silkRed group-hover:text-pureWhite transition-colors" />
                 <h3 className="text-xl font-semibold mb-2 text-charcoal group-hover:text-pureWhite transition-colors">
-                  {item.title}
+                  {translations[language].about[item.titleKey as keyof typeof translations.en.about]}
                 </h3>
                 <p className="text-charcoal/70 group-hover:text-pureWhite/90 transition-colors">
-                  {item.desc}
+                  {translations[language].about[item.descKey as keyof typeof translations.en.about]}
                 </p>
               </motion.div>
             ))}
@@ -155,23 +157,23 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-charcoal mb-4">
-              Our Campaigns
+              {translations[language].campaigns.title}
             </h2>
             <p className="mx-auto max-w-2xl text-lg font-bold text-charcoal px-6 py-3 rounded-2xl" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
-              Making a difference through targeted initiatives
+              {translations[language].campaigns.subtitle}
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {[
               {
-                title: "Community Health & Wellness",
-                desc: "Regular health camps with trained medical professionals providing check-ups, medicines, and health awareness to underserved communities.",
+                title: translations[language].campaigns.campaign1?.title || 'Community Health & Wellness',
+                desc: translations[language].campaigns.campaign1?.desc || 'Regular health camps with trained medical professionals providing check-ups, medicines, and health awareness to underserved communities.',
                 gradient: "from-silkRed/10 to-silkRedLight/10",
               },
               {
-                title: "Education For Children",
-                desc: "Breaking barriers and helping children from poor backgrounds by distributing books, uniforms, bags, and educational materials.",
+                title: translations[language].campaigns.campaign2?.title || 'Education For Children',
+                desc: translations[language].campaigns.campaign2?.desc || 'Breaking barriers and helping children from poor backgrounds by distributing books, uniforms, bags, and educational materials.',
                 gradient: "from-charcoal/10 to-charcoal/5",
               },
             ].map((campaign, idx) => (
@@ -195,7 +197,7 @@ export default function Home() {
                     href="#donate"
                     className="inline-flex items-center gap-2 text-silkRed font-medium group-hover:gap-3 transition-all"
                   >
-                    Support This Campaign
+                    {translations[language].campaigns.supportCampaign}
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                 </div>
@@ -216,10 +218,10 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-charcoal mb-4">
-              Make an Impact
+              {translations[language].donation.title}
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-charcoal/70">
-              Your contribution helps us create lasting change in communities across Jharkhand
+              {translations[language].donation.subtitle}
             </p>
           </motion.div>
 
@@ -231,17 +233,17 @@ export default function Home() {
               transition={{ duration: 0.6 }}
             >
               <h3 className="text-3xl font-semibold text-charcoal mb-6">
-                Every Contribution Matters
+                {translations[language].donation.heading}
               </h3>
               <p className="text-charcoal/70 mb-6 leading-relaxed">
-                Your donation directly supports health camps, educational programs, and community welfare initiatives. We ensure complete transparency and responsible use of every rupee.
+                {translations[language].donation.description}
               </p>
               <div className="space-y-4">
                 {[
-                  "Free medical camps and health awareness",
-                  "Educational support for underprivileged children",
-                  "Women empowerment programs",
-                  "Community welfare initiatives",
+                  translations[language].donation?.item1 || 'Free medical camps and health awareness',
+                  translations[language].donation?.item2 || 'Educational support for underprivileged children',
+                  translations[language].donation?.item3 || 'Women empowerment programs',
+                  translations[language].donation?.item4 || 'Community welfare initiatives',
                 ].map((item, idx) => (
                   <div key={idx} className="flex items-center gap-3">
                     <div className="w-2 h-2 rounded-full bg-silkRed" />
@@ -259,7 +261,7 @@ export default function Home() {
               className="rounded-3xl bg-gradient-to-br from-offWhite to-lightGray p-8"
             >
               <h3 className="text-2xl font-semibold text-charcoal mb-6">
-                Bank Transfer Details
+                {translations[language].donation.bankTransfer}
               </h3>
               <div className="space-y-4">
                 {[
@@ -275,7 +277,7 @@ export default function Home() {
                 ))}
               </div>
               <p className="mt-6 text-sm text-charcoal/60">
-                After donating, please share transaction details at{" "}
+                {translations[language].donation.afterDonating}{" "}
                 <a href="mailto:info@mdsst.org" className="text-silkRed font-medium hover:underline">
                   info@mdsst.org
                 </a>
@@ -296,19 +298,19 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-charcoal mb-4">
-              Our Impact
+              {translations[language].impact.title}
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-charcoal/70">
-              Creating measurable change in communities across Jharkhand
+              {translations[language].impact.subtitle}
             </p>
           </motion.div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { number: "1000+", label: "Lives Touched" },
-              { number: "50+", label: "Health Camps" },
-              { number: "200+", label: "Children Supported" },
-              { number: "15+", label: "Villages Reached" },
+              { number: "1000+", labelKey: "stat1" },
+              { number: "50+", labelKey: "stat2" },
+              { number: "200+", labelKey: "stat3" },
+              { number: "15+", labelKey: "stat4" },
             ].map((stat, idx) => (
               <motion.div
                 key={idx}
@@ -321,7 +323,7 @@ export default function Home() {
                 <div className="text-4xl sm:text-5xl font-semibold text-silkRed mb-2">
                   {stat.number}
                 </div>
-                <div className="text-sm text-charcoal/70">{stat.label}</div>
+                <div className="text-sm text-charcoal/70">{translations[language].impact[stat.labelKey as keyof typeof translations.en.impact]}</div>
               </motion.div>
             ))}
           </div>
@@ -339,40 +341,27 @@ export default function Home() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-charcoal mb-4">
-              Latest News & Events
+              {translations[language].news.title}
             </h2>
             <p className="mx-auto max-w-2xl text-lg text-charcoal/70">
-              Stay updated with our recent activities and upcoming initiatives
+              {translations[language].news.subtitle}
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                title: "Nasha Mukti Jagrukta Abhiyaan",
-                date: "November 20, 2024",
-                desc: "Organized a comprehensive anti-drug awareness campaign to educate youth and communities about the dangers of substance abuse.",
+                articleKey: "article1",
                 image: "/images/nashamukti1.jpg",
                 slug: "nasha-mukti-jagrukta-abhiyaan",
               },
               {
-                title: "Health Camp in Baliapur",
-                date: "March 15, 2024",
-                desc: "Successfully conducted a free health check-up camp serving over 200 community members.",
+                articleKey: "article2",
                 image: "/images/initiative4.jpg",
                 slug: "health-camp-baliapur",
               },
               {
-                title: "School Supplies Distribution",
-                date: "February 28, 2024",
-                desc: "Distributed books, bags, and stationery to 150 underprivileged children.",
-                image: "/images/initiative2.jpg",
-                slug: "school-supplies-distribution",
-              },
-              {
-                title: "Women Empowerment Workshop",
-                date: "January 20, 2024",
-                desc: "Organized skill development and awareness sessions for 80 women in rural areas.",
+                articleKey: "article3",
                 image: "/images/initiative3.jpg",
                 slug: "women-empowerment-workshop",
               },
@@ -391,7 +380,7 @@ export default function Home() {
                   <div className="relative h-48 overflow-hidden">
                     <Image
                       src={news.image}
-                      alt={news.title}
+                      alt={(translations[language].news[news.articleKey as keyof typeof translations.en.news] as any).title}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-300"
                     />
@@ -399,16 +388,16 @@ export default function Home() {
                   <div className="p-6">
                     <div className="flex items-center gap-2 text-sm text-silkRed mb-3">
                       <Calendar className="w-4 h-4" />
-                      <span>{news.date}</span>
+                      <span>{(translations[language].news[news.articleKey as keyof typeof translations.en.news] as any).date}</span>
                     </div>
                     <h3 className="text-xl font-semibold text-charcoal mb-3 group-hover:text-silkRed transition-colors">
-                      {news.title}
+                      {(translations[language].news[news.articleKey as keyof typeof translations.en.news] as any).title}
                     </h3>
                     <p className="text-charcoal/70 leading-relaxed mb-4">
-                      {news.desc}
+                      {(translations[language].news[news.articleKey as keyof typeof translations.en.news] as any).desc}
                     </p>
                     <span className="inline-flex items-center gap-2 text-silkRed font-medium group-hover:gap-3 transition-all">
-                      Read More
+                      {translations[language].news.readMore}
                       <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
@@ -443,17 +432,17 @@ export default function Home() {
                 <UserPlus className="w-12 h-12 text-silkRed" />
               </div>
               <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight text-charcoal mb-6">
-                Become a Volunteer
+                {translations[language].volunteer.title}
               </h2>
               <p className="text-charcoal/70 text-lg mb-6 leading-relaxed">
-                Join our team of dedicated volunteers and make a real difference in the lives of those who need it most. Whether you can spare a few hours a week or want to be more involved, we welcome your support.
+                {translations[language].volunteer.subtitle}
               </p>
               <ul className="space-y-4">
                 {[
-                  "Help organize health camps and community events",
-                  "Assist in educational programs for children",
-                  "Support administrative and fundraising activities",
-                  "Share your skills and expertise with our team",
+                  translations[language].volunteer.item1,
+                  translations[language].volunteer.item2,
+                  translations[language].volunteer.item3,
+                  translations[language].volunteer.item4,
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <div className="w-2 h-2 rounded-full bg-silkRed mt-2" />
@@ -470,59 +459,63 @@ export default function Home() {
               transition={{ duration: 0.6 }}
               className="bg-pureWhite rounded-3xl p-8 shadow-lg"
             >
-              <h3 className="text-2xl font-semibold text-charcoal mb-6">Volunteer Registration</h3>
-              <form className="space-y-4">
+              <h3 className="text-2xl font-semibold text-charcoal mb-6">{translations[language].volunteer.formTitle}</h3>
+              <form action="https://formspree.io/f/xnnlqepd" method="POST" className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-charcoal/70 mb-2">Full Name *</label>
+                  <label className="block text-sm font-medium text-charcoal/70 mb-2">{translations[language].volunteer.fullName} *</label>
                   <input
                     type="text"
+                    name="name"
                     required
                     className="w-full px-4 py-3 rounded-xl border border-charcoal/20 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all"
-                    placeholder="Your name"
+                    placeholder={translations[language].volunteer.namePlaceholder}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal/70 mb-2">Email *</label>
+                  <label className="block text-sm font-medium text-charcoal/70 mb-2">{translations[language].volunteer.email} *</label>
                   <input
                     type="email"
+                    name="email"
                     required
                     className="w-full px-4 py-3 rounded-xl border border-charcoal/20 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all"
-                    placeholder="your.email@example.com"
+                    placeholder={translations[language].volunteer.emailPlaceholder}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal/70 mb-2">Phone *</label>
+                  <label className="block text-sm font-medium text-charcoal/70 mb-2">{translations[language].volunteer.phone} *</label>
                   <input
                     type="tel"
+                    name="phone"
                     required
                     className="w-full px-4 py-3 rounded-xl border border-charcoal/20 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all"
-                    placeholder="+91 XXXXX XXXXX"
+                    placeholder={translations[language].volunteer.phonePlaceholder}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal/70 mb-2">Area of Interest</label>
-                  <select className="w-full px-4 py-3 rounded-xl border border-charcoal/20 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all">
-                    <option>Select an area</option>
-                    <option>Healthcare</option>
-                    <option>Education</option>
-                    <option>Community Development</option>
-                    <option>Fundraising</option>
-                    <option>Administrative Support</option>
+                  <label className="block text-sm font-medium text-charcoal/70 mb-2">{translations[language].volunteer.areaOfInterest}</label>
+                  <select name="area-of-interest" className="w-full px-4 py-3 rounded-xl border border-charcoal/20 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all">
+                    <option value="">{translations[language].volunteer.selectArea}</option>
+                    <option value="healthcare">{translations[language].volunteer.healthcare}</option>
+                    <option value="education">{translations[language].volunteer.education}</option>
+                    <option value="community-development">{translations[language].volunteer.communityDev}</option>
+                    <option value="fundraising">{translations[language].volunteer.fundraising}</option>
+                    <option value="administrative-support">{translations[language].volunteer.adminSupport}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-charcoal/70 mb-2">Message</label>
+                  <label className="block text-sm font-medium text-charcoal/70 mb-2">{translations[language].volunteer.message}</label>
                   <textarea
+                    name="message"
                     rows={3}
                     className="w-full px-4 py-3 rounded-xl border border-charcoal/20 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all"
-                    placeholder="Tell us about yourself and why you want to volunteer..."
+                    placeholder={translations[language].volunteer.messagePlaceholder}
                   />
                 </div>
                 <button
                   type="submit"
                   className="w-full bg-silkRed text-pureWhite px-6 py-3 rounded-xl font-medium hover:bg-silkRedDark transition-all duration-200 hover:shadow-lg"
                 >
-                  Submit Application
+                  {translations[language].volunteer.submitApp}
                 </button>
               </form>
             </motion.div>
@@ -541,10 +534,10 @@ export default function Home() {
               transition={{ duration: 0.6 }}
             >
               <h2 className="text-4xl sm:text-5xl font-semibold tracking-tight mb-6">
-                Get in Touch
+                {translations[language].contact.title}
               </h2>
               <p className="text-pureWhite/70 text-lg mb-8">
-                Have questions or want to get involved? We'd love to hear from you.
+                {translations[language].contact.subtitle}
               </p>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
@@ -552,7 +545,7 @@ export default function Home() {
                     <MapPin className="w-6 h-6 text-silkRed" />
                   </div>
                   <div>
-                    <div className="text-sm text-pureWhite/60 mb-1">Location</div>
+                    <div className="text-sm text-pureWhite/60 mb-1">{translations[language].contact.location}</div>
                     <div className="text-base">Nayadih, Keliasole, Dhanbad<br />Jharkhand - 828201, India</div>
                   </div>
                 </div>
@@ -561,7 +554,7 @@ export default function Home() {
                     <Phone className="w-6 h-6 text-silkRed" />
                   </div>
                   <div>
-                    <div className="text-sm text-pureWhite/60 mb-1">Phone</div>
+                    <div className="text-sm text-pureWhite/60 mb-1">{translations[language].contact.phone}</div>
                     <a href="tel:+919431390575" className="text-base hover:text-silkRed transition-colors">
                       +91 9431390575
                     </a>
@@ -572,7 +565,7 @@ export default function Home() {
                     <Mail className="w-6 h-6 text-silkRed" />
                   </div>
                   <div>
-                    <div className="text-sm text-pureWhite/60 mb-1">Email</div>
+                    <div className="text-sm text-pureWhite/60 mb-1">{translations[language].contact.email}</div>
                     <a href="mailto:info@mdsst.org" className="text-base hover:text-silkRed transition-colors">
                       info@mdsst.org
                     </a>
@@ -588,49 +581,53 @@ export default function Home() {
               transition={{ duration: 0.6 }}
               className="bg-pureWhite/5 backdrop-blur-sm rounded-3xl p-8"
             >
-              <h3 className="text-2xl font-semibold mb-6">Send us a Message</h3>
-              <form className="space-y-4">
+              <h3 className="text-2xl font-semibold mb-6">{translations[language].contact.formTitle}</h3>
+              <form action="https://formspree.io/f/xjkdkqlb" method="POST" className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-pureWhite/70 mb-2">Name *</label>
+                  <label className="block text-sm font-medium text-pureWhite/70 mb-2">{translations[language].contact.name} *</label>
                   <input
                     type="text"
+                    name="name"
                     required
                     className="w-full px-4 py-3 rounded-xl bg-pureWhite/10 border border-pureWhite/20 text-pureWhite placeholder-pureWhite/40 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all"
-                    placeholder="Your name"
+                    placeholder={translations[language].contact.namePlaceholder}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-pureWhite/70 mb-2">Email *</label>
+                  <label className="block text-sm font-medium text-pureWhite/70 mb-2">{translations[language].contact.email} *</label>
                   <input
                     type="email"
+                    name="email"
                     required
                     className="w-full px-4 py-3 rounded-xl bg-pureWhite/10 border border-pureWhite/20 text-pureWhite placeholder-pureWhite/40 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all"
-                    placeholder="your.email@example.com"
+                    placeholder={translations[language].contact.emailPlaceholder}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-pureWhite/70 mb-2">Subject *</label>
+                  <label className="block text-sm font-medium text-pureWhite/70 mb-2">{translations[language].contact.subject} *</label>
                   <input
                     type="text"
+                    name="subject"
                     required
                     className="w-full px-4 py-3 rounded-xl bg-pureWhite/10 border border-pureWhite/20 text-pureWhite placeholder-pureWhite/40 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all"
-                    placeholder="What is this regarding?"
+                    placeholder={translations[language].contact.subjectPlaceholder}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-pureWhite/70 mb-2">Message *</label>
+                  <label className="block text-sm font-medium text-pureWhite/70 mb-2">{translations[language].contact.message} *</label>
                   <textarea
+                    name="message"
                     rows={4}
                     required
                     className="w-full px-4 py-3 rounded-xl bg-pureWhite/10 border border-pureWhite/20 text-pureWhite placeholder-pureWhite/40 focus:border-silkRed focus:outline-none focus:ring-2 focus:ring-silkRed/20 transition-all"
-                    placeholder="Your message..."
+                    placeholder={translations[language].contact.messagePlaceholder}
                   />
                 </div>
                 <button
                   type="submit"
                   className="w-full bg-silkRed text-pureWhite px-6 py-3 rounded-xl font-medium hover:bg-silkRedDark transition-all duration-200 hover:shadow-lg flex items-center justify-center gap-2"
                 >
-                  Send Message
+                  {translations[language].contact.send}
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </form>

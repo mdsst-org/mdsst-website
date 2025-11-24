@@ -6,6 +6,7 @@ import { Calendar, ArrowLeft, MapPin, Users, X, ChevronLeft, ChevronRight, ZoomI
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { useLanguage, translations } from "@/app/layout";
 
 const newsData: Record<string, {
   title: string;
@@ -47,21 +48,6 @@ const newsData: Record<string, {
       "Many elderly residents and children received much-needed medical attention. The camp also focused on health awareness, with our team educating attendees about preventive healthcare, nutrition, and hygiene practices. Several cases requiring further medical attention were identified and referred to appropriate healthcare facilities.",
       "The overwhelming response from the community reinforces our commitment to making healthcare accessible to all. We distributed health education materials and provided guidance on maintaining a healthy lifestyle. The camp concluded with a promise to conduct more such initiatives in the future.",
       "We extend our heartfelt gratitude to all the medical professionals who volunteered their time and expertise, and to the local community leaders who helped organize this event. Together, we are making a difference in the lives of those who need it most."
-    ]
-  },
-  "school-supplies-distribution": {
-    title: "School Supplies Distribution",
-    date: "February 28, 2024",
-    location: "Multiple Schools, Dhanbad District",
-    participants: "150 underprivileged children",
-    image: "/images/initiative2.jpg",
-    excerpt: "Distributed books, bags, and stationery to 150 underprivileged children.",
-    content: [
-      "Education is the foundation of a better future, and on February 28, 2024, Maa Durga Seva Sansthan Trust took a significant step towards ensuring that financial constraints don't hinder a child's education. We distributed essential school supplies to 150 underprivileged children across multiple schools in Dhanbad district.",
-      "Each child received a complete education kit including a sturdy school bag, notebooks, textbooks, pencils, pens, erasers, sharpeners, and other essential stationery items. The joy and excitement on the children's faces as they received their new supplies was truly heartwarming and reinforced our mission.",
-      "The distribution event was organized in coordination with local schools and community leaders. We also took this opportunity to interact with the children and their parents, understanding their educational needs and challenges. Many parents expressed their gratitude, sharing how these supplies would significantly ease their financial burden.",
-      "Beyond just providing materials, we emphasized the importance of education and encouraged the children to pursue their studies with dedication. We also distributed educational posters and reading materials to promote a culture of learning in their homes.",
-      "This initiative is part of our ongoing commitment to support education for underprivileged children. We believe that every child deserves access to quality education, and we will continue to work towards breaking down barriers that prevent children from reaching their full potential."
     ]
   },
   "women-empowerment-workshop": {
