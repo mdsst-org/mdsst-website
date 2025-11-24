@@ -120,6 +120,26 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+
+          {/* Comic Presentation Image */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mt-20"
+          >
+            <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl">
+              <Image
+                src="/images/comicPresentation.jpg"
+                alt="MDSST Comic Presentation - Our Journey and Impact"
+                width={1200}
+                height={675}
+                className="w-full h-auto"
+                priority
+              />
+            </div>
+          </motion.div>
         </div>
       </section>
 
