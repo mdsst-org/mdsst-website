@@ -490,7 +490,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                       onClick={() => setMobileMenuOpen(false)}
                       className="block text-base font-medium text-charcoal hover:text-silkRed transition-colors"
                     >
-                      {item.label}
+                      {translations[language].nav[item.key]}
                     </Link>
                   ))}
                   <Link
