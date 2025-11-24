@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu, X, Languages } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Head from "next/head";
 
 // Language Context
 const LanguageContext = createContext<{
@@ -395,10 +396,119 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <LanguageContext.Provider value={{ language, toggleLanguage }}>
       <html lang={language} className="scroll-smooth">
         <head>
-          <title>Maa Durga Seva Sansthan Trust | Empowering Lives</title>
+          {/* Primary Meta Tags */}
+          <title>Maa Durga Seva Sansthan Trust | NGO for Healthcare, Education & Community Welfare in India</title>
+          <meta name="title" content="Maa Durga Seva Sansthan Trust | NGO for Healthcare, Education & Community Welfare in India" />
           <meta
             name="description"
-            content="A charitable trust dedicated to health, education, and community welfare in Jharkhand."
+            content="Maa Durga Seva Sansthan Trust (MDSST) is a registered non-profit NGO dedicated to creating positive change through healthcare, education, and community welfare programs across Jharkhand, India. Join us in empowering lives through compassion. Donate, volunteer, and make a difference."
+          />
+          <meta
+            name="keywords"
+            content="NGO India, non-profit organization, charity Jharkhand, healthcare NGO, education NGO, community welfare, social service organization, volunteer India, donate to NGO, Maa Durga Seva Sansthan Trust, MDSST, Dhanbad NGO, rural development India, women empowerment NGO, health camps India, child education support, international NGO, humanitarian organization, social impact India, poverty alleviation, NGO Jharkhand, Indian charity, social work India, community development NGO"
+          />
+          <meta name="author" content="Maa Durga Seva Sansthan Trust" />
+          <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+          <meta name="googlebot" content="index, follow" />
+          <link rel="canonical" href="https://mdsst.org" />
+          
+          {/* Open Graph / Facebook */}
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://mdsst.org" />
+          <meta property="og:title" content="Maa Durga Seva Sansthan Trust | Empowering Lives Through Compassion" />
+          <meta
+            property="og:description"
+            content="Join MDSST in creating positive change through healthcare, education, and community welfare programs across Jharkhand, India. Volunteer or donate to make a difference."
+          />
+          <meta property="og:image" content="https://mdsst.org/og-image.jpg" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta property="og:site_name" content="Maa Durga Seva Sansthan Trust" />
+          <meta property="og:locale" content="en_IN" />
+          <meta property="og:locale:alternate" content="hi_IN" />
+          
+          {/* Twitter */}
+          <meta property="twitter:card" content="summary_large_image" />
+          <meta property="twitter:url" content="https://mdsst.org" />
+          <meta property="twitter:title" content="Maa Durga Seva Sansthan Trust | NGO for Healthcare & Education" />
+          <meta
+            property="twitter:description"
+            content="Join MDSST in creating positive change through healthcare, education, and community welfare programs across Jharkhand, India."
+          />
+          <meta property="twitter:image" content="https://mdsst.org/og-image.jpg" />
+          
+          {/* Additional SEO Tags */}
+          <meta name="geo.region" content="IN-JH" />
+          <meta name="geo.placename" content="Dhanbad, Jharkhand" />
+          <meta name="geo.position" content="23.7957;86.4304" />
+          <meta name="ICBM" content="23.7957, 86.4304" />
+          <meta name="language" content="English, Hindi" />
+          <meta name="revisit-after" content="7 days" />
+          <meta name="rating" content="General" />
+          <meta name="distribution" content="global" />
+          
+          {/* Favicon */}
+          <link rel="icon" href="/favicon.ico" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+          
+          {/* JSON-LD Structured Data */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'NGO',
+                name: 'Maa Durga Seva Sansthan Trust',
+                alternateName: 'MDSST',
+                url: 'https://mdsst.org',
+                logo: 'https://mdsst.org/logo.png',
+                description: 'Maa Durga Seva Sansthan Trust is a registered non-profit NGO dedicated to creating positive change through healthcare, education, and community welfare programs across Jharkhand, India.',
+                foundingDate: '2020',
+                email: 'info@mdsst.org',
+                telephone: '+919431390575',
+                address: {
+                  '@type': 'PostalAddress',
+                  streetAddress: 'Nayadih, Keliasole',
+                  addressLocality: 'Dhanbad',
+                  addressRegion: 'Jharkhand',
+                  postalCode: '828201',
+                  addressCountry: 'IN'
+                },
+                geo: {
+                  '@type': 'GeoCoordinates',
+                  latitude: '23.7957',
+                  longitude: '86.4304'
+                },
+                areaServed: {
+                  '@type': 'State',
+                  name: 'Jharkhand',
+                  containedIn: {
+                    '@type': 'Country',
+                    name: 'India'
+                  }
+                },
+                contactPoint: {
+                  '@type': 'ContactPoint',
+                  telephone: '+919431390575',
+                  email: 'info@mdsst.org',
+                  contactType: 'Customer Service',
+                  availableLanguage: ['English', 'Hindi']
+                },
+                knowsAbout: [
+                  'Healthcare Services',
+                  'Education Support',
+                  'Community Development',
+                  'Women Empowerment',
+                  'Rural Development',
+                  'Social Welfare'
+                ],
+                seeks: {
+                  '@type': 'Demand',
+                  name: 'Volunteers and Donations',
+                  description: 'We seek volunteers and donations to support our healthcare, education, and community welfare programs.'
+                }
+              })
+            }}
           />
         </head>
         <body className="bg-pureWhite text-charcoal">
