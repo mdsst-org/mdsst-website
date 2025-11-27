@@ -304,6 +304,39 @@ export default function Home() {
               </p>
             </motion.div>
           </div>
+
+          {/* UPI Payment QR Code */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-16 max-w-xl mx-auto"
+          >
+            <div className="rounded-3xl bg-gradient-to-br from-silkRed/5 to-silkRed/10 p-8 text-center border-2 border-silkRed/20">
+              <h3 className="text-2xl font-semibold text-charcoal mb-3">
+                {language === 'en' ? 'Quick Donate via UPI' : 'UPI से त्वरित दान करें'}
+              </h3>
+              <p className="text-base text-charcoal/70 mb-6">
+                {language === 'en' ? 'Scan the QR code with any UPI app' : 'किसी भी UPI ऐप से QR कोड स्कैन करें'}
+              </p>
+              <div className="relative w-full max-w-sm mx-auto mb-5 bg-white rounded-2xl p-5 shadow-lg">
+                <Image
+                  src="/paymentQR.jpg"
+                  alt="UPI Payment QR Code for MDSST Donations"
+                  width={400}
+                  height={400}
+                  className="w-full h-auto"
+                />
+              </div>
+              <div className="flex flex-wrap justify-center gap-2 text-sm text-charcoal/60">
+                <span className="px-3 py-1 bg-white rounded-full">Google Pay</span>
+                <span className="px-3 py-1 bg-white rounded-full">PhonePe</span>
+                <span className="px-3 py-1 bg-white rounded-full">Paytm</span>
+                <span className="px-3 py-1 bg-white rounded-full">{language === 'en' ? 'Any UPI App' : 'कोई भी UPI ऐप'}</span>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
