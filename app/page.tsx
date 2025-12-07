@@ -1,5 +1,4 @@
 "use client";
-
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Users, GraduationCap, Stethoscope, ArrowRight, Mail, Phone, MapPin, Calendar, Newspaper, UserPlus } from "lucide-react";
 import Link from "next/link";
@@ -17,6 +16,8 @@ export default function Home() {
     "/images/initiative4.jpg",
     "/images/initiative5.jpg",
   ];
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState('')
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,6 +26,56 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [images.length]);
+
+const handleVolunteerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
+  setIsSubmitting(true)
+  setSubmitMessage('')
+
+  const form = e.currentTarget // Store form reference
+  const formData = new FormData(form)
+  const data = {
+    name: formData.get('name'),
+    email: formData.get('email'),
+    phone: formData.get('phone'),
+    areaOfInterest: formData.get('area-of-interest'),
+    message: formData.get('message'),
+  }
+
+  try {
+    // Step 1: Submit to your database
+    // console.log('Submitting data:', data)
+    const response = await fetch('/api/volunteers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+
+    //console.log('Response status:', response.status)
+    const responseData = await response.json()
+    //console.log('Response data:', responseData)
+
+    if (!response.ok) {
+      throw new Error(responseData.error || 'Failed to submit')
+    }
+
+    // Step 2: Also submit to Formspree (for email notifications)
+    await fetch('https://formspree.io/f/xnnlqepd', {
+      method: 'POST',
+      body: formData,
+      headers: { Accept: 'application/json' },
+    })
+
+    // Success!
+    setSubmitMessage('Thank you! Your application has been submitted successfully.')
+    form.reset() // Now using the stored reference
+  } catch (error) {
+    console.error('Submission error:', error)
+    setSubmitMessage(`Sorry, there was an error: ${error instanceof Error ? error.message : 'Please try again.'}`)
+  } finally {
+    setIsSubmitting(false)
+  }
+}
 
   return (
     <>
@@ -513,7 +564,7 @@ export default function Home() {
               className="bg-pureWhite rounded-3xl p-8 shadow-lg"
             >
               <h3 className="text-2xl font-semibold text-charcoal mb-6">{translations[language].volunteer.formTitle}</h3>
-              <form action="https://formspree.io/f/xnnlqepd" method="POST" className="space-y-4">
+              <form onSubmit={handleVolunteerSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-charcoal/70 mb-2">{translations[language].volunteer.fullName} *</label>
                   <input
@@ -564,11 +615,17 @@ export default function Home() {
                     placeholder={translations[language].volunteer.messagePlaceholder}
                   />
                 </div>
+                {submitMessage && (
+                  <div className={`p-4 rounded-xl ${submitMessage.includes('error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                    {submitMessage}
+                  </div>
+                )}
                 <button
                   type="submit"
-                  className="w-full bg-silkRed text-pureWhite px-6 py-3 rounded-xl font-medium hover:bg-silkRedDark transition-all duration-200 hover:shadow-lg"
+                  disabled={isSubmitting}
+                  className="w-full bg-silkRed text-pureWhite px-6 py-3 rounded-xl font-medium hover:bg-silkRedDark transition-all duration-200 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {translations[language].volunteer.submitApp}
+                  {isSubmitting ? 'Submitting...' : translations[language].volunteer.submitApp}
                 </button>
               </form>
             </motion.div>
