@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { supabase, Volunteer } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import { Download, LogOut, Search } from 'lucide-react'
+import { Download, LogOut, Search, Newspaper } from 'lucide-react'
 
 export default function AdminDashboard() {
   const [volunteers, setVolunteers] = useState<Volunteer[]>([])
@@ -90,13 +90,22 @@ export default function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-charcoal">Volunteer Management</h1>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 text-charcoal/70 hover:text-silkRed transition-colors"
-            >
-              <LogOut size={20} />
-              Logout
-            </button>
+            <div className="flex gap-4">
+              <button
+                onClick={() => router.push('/admin/news')}
+                className="flex items-center gap-2 px-4 py-2 text-charcoal/70 hover:text-blue-600 transition-colors"
+              >
+                <Newspaper size={20} />
+                Manage News
+              </button>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 text-charcoal/70 hover:text-silkRed transition-colors"
+              >
+                <LogOut size={20} />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>

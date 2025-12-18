@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useLanguage, translations } from "./layout";
+import { News } from "@/lib/supabase";
 
 export default function Home() {
   const { language } = useLanguage();
@@ -18,6 +19,8 @@ export default function Home() {
   ];
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState('')
+  const [newsItems, setNewsItems] = useState<News[]>([])
+  const [loadingNews, setLoadingNews] = useState(true)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,6 +29,25 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [images.length]);
+
+  // Fetch news from database
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch('/api/news')
+        const result = await response.json()
+        if (result.data) {
+          setNewsItems(result.data.slice(0, 3))
+        }
+      } catch (error) {
+        console.error('Error fetching news:', error)
+      } finally {
+        setLoadingNews(false)
+      }
+    }
+
+    fetchNews()
+  }, [])
 
 const handleVolunteerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
@@ -452,67 +474,76 @@ const handleVolunteerSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                articleKey: "article1",
-                image: "/images/nashamukti1.jpg",
-                slug: "nasha-mukti-jagrukta-abhiyaan",
-              },
-              {
-                articleKey: "article2",
-                image: "/images/initiative4.jpg",
-                slug: "health-camp-baliapur",
-              },
-              {
-                articleKey: "article3",
-                image: "/images/initiative3.jpg",
-                slug: "women-empowerment-workshop",
-              },
-            ].map((news, idx) => (
-              <motion.article
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.1 }}
-              >
-                <Link
-                  href={`/news/${news.slug}`}
-                  className="block group bg-offWhite rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300"
+          {loadingNews ? (
+            <div className="text-center py-12">
+              <p className="text-charcoal/60">Loading news...</p>
+            </div>
+          ) : newsItems.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-charcoal/60">No news available yet.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {newsItems.map((news, idx) => (
+                <motion.article
+                  key={news.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: idx * 0.1 }}
                 >
-                  <div className="relative h-48 overflow-hidden">
-                    <Image
-                      src={news.image}
-                      alt={(translations[language].news[news.articleKey as keyof typeof translations.en.news] as any).title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center gap-2 text-sm text-silkRed mb-3">
-                      <Calendar className="w-4 h-4" />
-                      <span>{(translations[language].news[news.articleKey as keyof typeof translations.en.news] as any).date}</span>
+                  <Link
+                    href={`/news/${news.id}`}
+                    className="block group bg-offWhite rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300"
+                  >
+                    <div className="relative h-48 overflow-hidden">
+                      {news.image_url ? (
+                        <Image
+                          src={news.image_url}
+                          alt={news.title}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-silkRed/20 to-charcoal/20 flex items-center justify-center">
+                          <Newspaper className="w-16 h-16 text-charcoal/30" />
+                        </div>
+                      )}
                     </div>
-                    <h3 className="text-xl font-semibold text-charcoal mb-3 group-hover:text-silkRed transition-colors">
-                      {(translations[language].news[news.articleKey as keyof typeof translations.en.news] as any).title}
-                    </h3>
-                    <p className="text-charcoal/70 leading-relaxed mb-4">
-                      {(translations[language].news[news.articleKey as keyof typeof translations.en.news] as any).desc}
-                    </p>
-                    <span className="inline-flex items-center gap-2 text-silkRed font-medium group-hover:gap-3 transition-all">
-                      {translations[language].news.readMore}
-                      <ArrowRight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </Link>
-              </motion.article>
-            ))}
-          </div>
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 text-sm text-silkRed mb-3">
+                        <Calendar className="w-4 h-4" />
+                        <span>
+                          {new Date(news.published_at || news.created_at).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-semibold text-charcoal mb-3 group-hover:text-silkRed transition-colors">
+                        {news.title}
+                      </h3>
+                      <p className="text-charcoal/70 leading-relaxed mb-4 line-clamp-3">
+                        {news.summary}
+                      </p>
+                      {news.author && (
+                        <p className="text-sm text-charcoal/50 mb-4">By {news.author}</p>
+                      )}
+                      <span className="inline-flex items-center gap-2 text-silkRed font-medium group-hover:gap-3 transition-all">
+                        {translations[language].news.readMore}
+                        <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </div>
+                  </Link>
+                </motion.article>
+              ))}
+            </div>
+          )}
 
           <div className="mt-12 text-center">
             <Link
-              href="#news"
+              href="/news"
               className="inline-flex items-center gap-2 text-silkRed font-medium hover:gap-3 transition-all"
             >
               View All News

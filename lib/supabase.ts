@@ -20,3 +20,18 @@ export type Volunteer = {
   created_at: string
   status: 'pending' | 'contacted' | 'approved' | 'rejected'
 }
+
+export type News = {
+  id: string
+  title: string
+  summary: string
+  content: string | null
+  image_url: string | null
+  additional_images: string[] | null
+  author: string | null
+  published: boolean
+  featured: boolean
+  created_at: string
+  updated_at: string
+  published_at: string | null
+}
